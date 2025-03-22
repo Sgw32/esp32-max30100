@@ -218,7 +218,7 @@ bool max30100_detect_pulse(max30100_config_t* this, float sensor_value) {
                 raw_bpm = 60000.0 / (float)beat_duration;
 
             if(this->debug){
-                printf("Beat duration: %u\n", beat_duration);
+                printf("Beat duration: %lu\n", beat_duration);
                 printf("Raw BPM: %f\n", raw_bpm);
             }
 
@@ -337,7 +337,7 @@ esp_err_t max30100_write_register( max30100_config_t* this,
     i2c_master_stop(cmd);
     esp_err_t ret = i2c_master_cmd_begin( this->i2c_num,
                                           cmd,
-                                          1000 / portTICK_RATE_MS );
+                                          1000 / portTICK_PERIOD_MS );
     i2c_cmd_link_delete(cmd);
     return ret;
 }
@@ -361,7 +361,7 @@ esp_err_t max30100_read_register( max30100_config_t* this,
     i2c_master_stop(cmd);
     esp_err_t ret = i2c_master_cmd_begin( this->i2c_num,
                                           cmd,
-                                          1000 / portTICK_RATE_MS );
+                                          1000 / portTICK_PERIOD_MS );
 
     i2c_cmd_link_delete(cmd);
     return ret;
@@ -392,7 +392,7 @@ esp_err_t max30100_read_from( max30100_config_t* this,
     i2c_master_stop(cmd);
     esp_err_t ret = i2c_master_cmd_begin( this->i2c_num,
                                           cmd,
-                                          1000 / portTICK_RATE_MS );
+                                          1000 / portTICK_PERIOD_MS );
     i2c_cmd_link_delete(cmd);
     return ret;
 }
