@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include "max30100/max30100.h"
 #include "max30100/registers.h"
+#include "esp_log.h"
 #include <string.h>
 
 esp_err_t max30100_init( max30100_config_t* this,
@@ -116,7 +117,11 @@ esp_err_t max30100_update(max30100_config_t* this, max30100_data_t* data) {
 
     max30100_fifo_t raw_data;
     esp_err_t ret = max30100_read_fifo(this, &raw_data);
-    if(ret != ESP_OK) return ret;
+    if(ret != ESP_OK)
+    {
+        ESP_LOGI("MAX30100", "Error reading FIFO: %d", ret);
+        return ret;
+    } 
 
     this->dc_filter_ir = max30100_dc_removal( (float)raw_data.raw_ir,
                                               this->dc_filter_ir.w,
@@ -162,8 +167,11 @@ esp_err_t max30100_update(max30100_config_t* this, max30100_data_t* data) {
     ret = max30100_balance_intensities( this,
                                         this->dc_filter_red.w,
                                         this->dc_filter_ir.w   );
-    if(ret != ESP_OK) return ret;
-
+    if(ret != ESP_OK) 
+    {
+        ESP_LOGI("MAX30100", "Error balancing intensities: %d", ret);
+        return ret;
+    }
 
     data->heart_bpm = this->current_bpm;
     data->ir_cardiogram = this->lpb_filter_ir.result;
