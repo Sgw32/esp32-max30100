@@ -115,8 +115,9 @@ esp_err_t max30100_update(max30100_config_t* this, max30100_data_t* data) {
     data->dc_filtered_ir = 0.0;
     data->dc_filtered_red = 0.0;
 
-    max30100_fifo_t raw_data;
+    max30100_fifo_t raw_data = {0, 0};
     esp_err_t ret = max30100_read_fifo(this, &raw_data);
+    //ESP_LOGI("MAX30100", "Raw IR: %f, Raw RED: %f",  (float)raw_data.raw_ir,  (float)raw_data.raw_red);
     if(ret != ESP_OK)
     {
         ESP_LOGI("MAX30100", "Error reading FIFO: %d", ret);
